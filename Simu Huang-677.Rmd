@@ -1,0 +1,94 @@
+---
+title: "677 assignment1"
+author: "Simu Huang"
+date: "2021/2/10"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+```
+
+
+
+
+The significance level here is 0.05, depend on the normal distribution plot, the z statistics equals to 1.64.
+$$z =\frac{\hat{p}-p_o}{\sqrt{\frac{p_o(1-p_o)}{n}}}$$
+
+$$1.64=\frac{\hat{p}-0.6}{\sqrt{\frac{0.6(1-0.6)}{100}}}$$
+
+```{r}
+1.64*sqrt(0.6*0.4)/10+0.6
+```
+
+So that the minimum value of $m$ should be 69. 
+
+The significance level here is 0.05, depend on the normal distribution plot, the z statistics equals to -1.64.
+$$z =\frac{\hat{p}-p_o}{\sqrt{\frac{p_o(1-p_o)}{n}}}$$
+
+
+
+$$-1.64=\frac{\hat{p}-0.6}{\sqrt{\frac{0.6(1-0.6)}{100}}}$$
+
+```{r}
+-1.64*sqrt(0.8*0.2)/10+0.8
+```
+
+So the largest value of $m$ should be 73.
+
+```{r}
+alpha_0.6_m <- function(m){
+  dbinom(m,100,0.6)
+}
+
+alpha_0.8_m <- function(m){
+  dbinom(m,100,0.8)
+}
+
+for (i in 69:100) {
+  
+  m_1 <- 1
+  if(alpha_0.6_m(m_1)<0.05){
+    m_1 <- i + 1
+    print(m_1)
+    break
+  
+}}
+
+for (j in 73:100) {
+  
+  m_2 <- 1
+  if(alpha_0.8_m(m_2)<0.05){
+    m_2 <- j + 1
+    print(m_2)
+    break
+  
+}}
+
+
+
+
+# plot
+alpha_p_69 <- function(p){
+ a <- sum(dbinom(69:100,100,p))
+ a
+}
+alpha_p_73 <- function(p){
+ b <- sum(dbinom(73:100,100,p))
+ b
+}
+
+alpha_p_69 <- Vectorize(alpha_p_69)
+alpha_p_73 <- Vectorize(alpha_p_73)
+
+ggplot() +
+  stat_function(fun = alpha_p_69) + 
+  stat_function(fun = alpha_p_73) +
+  xlim(0.4, 1) +
+  scale_y_continuous(breaks = 0,1,0.01)
+
+
+```
